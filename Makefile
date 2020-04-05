@@ -19,7 +19,7 @@ $(WORK_DIR):
 	python3 -m venv $(WORK_DIR)
 
 init: $(WORK_DIR)
-	## cd $(WORK_DIR); . bin/activate ; pip install --upgrade pip 
+	cd $(WORK_DIR); . bin/activate ; pip install --upgrade pip 
 	cd $(WORK_DIR); . bin/activate ; pip install --log /tmp/pip.log -r ../$(DEPS)
 
 update:
