@@ -1,0 +1,131 @@
+##
+## define the storage model for this application
+
+server:
+  host: localhost
+  dbms: sqlite3
+  type: sql
+  path: ../data
+
+secrets:
+  dbms: DBMS_NAME
+  user: USER_NAME
+  host: HOST_NAME
+  port: DBMS_PORT
+  path: DBMS_PATH
+
+database:
+  name: UserData.sq3
+  tables:
+    model:
+       version: 0.125
+       security: admin
+       fields:
+          tab:
+             type: varchar(64)
+             constraints: 
+               - not null
+          version:
+             type: float
+             constraints:
+               - not null
+       keys:
+          - tab
+          - version 
+    user:
+       version: 1.0
+       security: personal_data
+       fields:
+          email:
+             type: varchar(128)
+             constraints: 
+               - not null
+          password:
+             type: password
+             constraints: 
+               - not null
+          authenticated:
+             type: boolean
+             constraints: 
+               - not null
+               - default false
+          active:
+             type: boolean
+             constraints: 
+               - not null
+               - default false
+       keys:
+          - email
+    mfa:
+       version: 1.0
+       security: admin
+       fields:
+          email:
+             type: varchar(128)
+             constraints: 
+               - not null
+          mfatype:
+             type: enum
+             values:
+               - undefined
+               - security
+               - sms
+               - email
+               - cert
+             constraints: 
+               - default 1
+          mfa:
+             type: varchar(128)
+             constraints: 
+               - not null
+          authenticated:
+             type: boolean
+             constraints: 
+               - not null
+               - default false
+       keys:
+          - email 
+          - mfatype 
+
+    security:
+       version: 1.0
+       security: personal_data
+       fields:
+          email:
+             type: varchar(128)
+             constraints: 
+               - not null
+          question:
+             type: text
+             constraints: 
+               - not null
+          answer:
+             type: varchar(128)
+             constraints: 
+               - not null
+       keys:
+          - email 
+          - question 
+
+    role:
+       version: 1.0
+       security: admin
+       fields:
+          email:
+             type: varchar(128)
+             constraints: 
+               - not null
+          role:
+             type: enum
+             values:
+               - undefined
+               - guest
+               - user
+               - admin
+               - group admin
+               - revoked
+             constraints: 
+               - not null
+       keys:
+          - email 
+          - role 

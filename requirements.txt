@@ -1,0 +1,10 @@
+fastapi[all]
+passlib
+uvicorn
+email-validator
+dateutils
+pytest
+jinja2
+python-multipart
+pyjwt
+pyyaml

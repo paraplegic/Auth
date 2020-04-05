@@ -1,0 +1,5 @@
+export DBMS_NAME='test_db.sq3'
+export USER_NAME='rob'
+export HOST_NAME='localhost'
+export DBMS_PORT='9090'
+export DBMS_PATH='../data'
