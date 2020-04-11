@@ -2,9 +2,9 @@ import os
 from yaml import load, dump
 
 try:
-  from yaml import CLoader as Loader, CDumper as Dumper
+  from yaml import CLoader as Loader
 except ImportError:
-  from yaml import Loader, Dumper
+  from yaml import Loader
 
 class Config():
 
@@ -20,15 +20,8 @@ class Config():
 		try:
 			with open(self.path,'r') as cfg:
 			 self.config = load(cfg, Loader=Loader)
-
 		except Exception as e:
 			print(e)
-
-	def describes(self, config):
-		for t in self.objects():
-			if t == config:
-				return self.config[t]
-		return None
 
 	def dump(self):
 		print(dump(self.config))
@@ -37,7 +30,9 @@ class Config():
 		return self.config.keys()
 
 	def object(self, object):
-		return self.config[object]
+		if object in self.config:
+			return self.config[object]
+		return None
 
 	def attrs(self, obj):
 		return self.config[obj].keys()

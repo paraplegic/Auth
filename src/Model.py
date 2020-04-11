@@ -54,7 +54,16 @@ class Model(object):
 		return self.model['tables'][table]['version']
 
 	def key(self,table):
-		return self.model['tables'][table]['keys']
+		if 'keys' in self.model['tables'][table]:
+			return self.model['tables'][table]['keys']
+		return None
+
+	def payload(self,table):
+		keys = self.key(table)
+		fields = self.fields(table)
+		if not keys:
+			return fields
+		return list(set(fields)-set(keys))
 
 	def check_table(self,table):
 		if table in self.tables():

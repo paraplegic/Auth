@@ -1,10 +1,13 @@
-fastapi[all]
+## orjson>=2.6,<3
+## fastapi[all]
+## email-validator
+## python-multipart
+## uvicorn
+## dateutils
 passlib
-uvicorn
-email-validator
-dateutils
 pytest
 jinja2
-python-multipart
 pyjwt
 pyyaml
+psycopg2
+mysql-connector-python

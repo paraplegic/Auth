@@ -11,7 +11,7 @@ USR_CFG=$(MODEL)/users.yml
 TDIR=./data
 BKP=./backup.tgz
 
-TESTS=test_config test_persist test_model test_sql test_sqlite
+TESTS=test_config test_persist test_model test_sql test_sqlite test_postgres test_mysql
 
 all:	test
 
@@ -27,7 +27,9 @@ update:
 	cp -r $(ENV) $(WORK_DIR)
 
 test_clean:
-	rm -rf $(TDIR)/*.sq3
+	rm -rf $(TDIR)/test
+	psql -h lifter -d test -U rob < $(TDIR)/dropall.sql
+	mysql -h lifter -p test < $(TDIR)/dropall.sql
 
 clean:	test_clean
 	@echo himom
@@ -49,15 +51,23 @@ test_config:
 
 test_persist:
 	@echo ===========
-	@echo persistence
+	@echo persistence sqlite
 	@echo ===========
-	@cd $(WORK_DIR);. ./bin/activate ; . ./test/env.sh; python3 $(SOURCE_DIR)/Persist.py $(USR_CFG)
+	@cd $(WORK_DIR);. ./bin/activate ; . ./test/env.sh; python3 $(SOURCE_DIR)/Persist.py $(USR_CFG) sqlite
+	@echo ===========
+	@echo persistence postgres
+	@echo ===========
+	@cd $(WORK_DIR);. ./bin/activate ; . ./test/env.sh; python3 $(SOURCE_DIR)/Persist.py $(USR_CFG) postgres
+	@echo ===========
+	@echo persistence mysql
+	@echo ===========
+	@cd $(WORK_DIR);. ./bin/activate ; . ./test/env.sh; export DBMS_PORT=3306; python3 $(SOURCE_DIR)/Persist.py $(USR_CFG) mysql
 
 test_model:
 	@echo ===========
 	@echo model
 	@echo ===========
-	@cd $(WORK_DIR);. ./bin/activate ; python3 $(SOURCE_DIR)/Model.py $(USR_CFG)
+	@cd $(WORK_DIR);. ./bin/activate ; python3 $(SOURCE_DIR)/Model.py $(USR_CFG) sqlite
 
 test_sql:
 	@echo ===========
@@ -70,5 +80,17 @@ test_sqlite:
 	@echo Sqlite
 	@echo ===========
 	@cd $(WORK_DIR);. ./bin/activate ; . ./test/env.sh; python3 $(SOURCE_DIR)/Sqlite.py $(USR_CFG)
+
+test_postgres:
+	@echo ===========
+	@echo PostgreSQL
+	@echo ===========
+	@cd $(WORK_DIR);. ./bin/activate ; . ./test/env.sh; python3 $(SOURCE_DIR)/Postgres.py $(USR_CFG)
+
+test_mysql:
+	@echo ===========
+	@echo MySql
+	@echo ===========
+	@cd $(WORK_DIR);. ./bin/activate ; . ./test/env.sh; export DBMS_PORT=3306; python3 $(SOURCE_DIR)/MySql.py $(USR_CFG)
 
 test: update $(TESTS) 

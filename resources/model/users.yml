@@ -10,6 +10,7 @@ server:
 secrets:
   dbms: DBMS_NAME
   user: USER_NAME
+  pass: USER_PASS
   host: HOST_NAME
   port: DBMS_PORT
   path: DBMS_PATH
@@ -32,7 +33,7 @@ database:
        keys:
           - tab
           - version 
-    user:
+    usr:
        version: 1.0
        security: personal_data
        fields:
@@ -96,7 +97,7 @@ database:
              constraints: 
                - not null
           question:
-             type: text
+             type: varchar(128)
              constraints: 
                - not null
           answer:

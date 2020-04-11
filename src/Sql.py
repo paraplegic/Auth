@@ -10,7 +10,7 @@ class Sql:
 		rv = None
 		try:
 			schema = self.model.table(table)
-			rv = 'create table %s (\n' % table
+			rv = 'CREATE TABLE IF NOT EXISTS ''%s'' (\n' % table
 			for fld in self.model.fields(table):
 				field = self.model.field(table,fld)
 				typ = field['type']
@@ -23,7 +23,7 @@ class Sql:
 				if 'constraints' in field:
 					rv += ' %s' % ' '.join(field['constraints'])
 				rv += ',\n'
-
+ 
 			if 'keys' in schema:
 				rv += ' primary key( %s )\n' % ",".join(schema['keys'])
 			else:
@@ -51,14 +51,16 @@ class Sql:
 					return False
 		return True
 
+	def mapfield(self,table,field,data):
+		schema = self.model.field(table,field)
+		if schema['type'] in ['integer', 'float', 'boolean']:
+			return str(data[field])
+		return "'%s'" % data[field]
+		
 	def mapdata(self,table,data):
 		rv = ""
 		for f in self.model.fields(table):
-			schema = self.model.field(table,f)
-			if schema['type'] in ['integer', 'float']:
-				rv += str(data[f]) + ','
-			else:
-				rv += "'%s'," % data[f]
+			rv += self.mapfield(table,f,data) + ','
 		return rv[0:-1]
 
 	def insert(self,table,data):
@@ -67,15 +69,41 @@ class Sql:
 		good_fields =  self.check_fields( table, data.keys() )
 		if good_table and good_fields:
 			model_fields = self.model.fields(table)
-			rv = "insert into %s ( %s ) values ( %s );\n" % (table,",".join(model_fields),self.mapdata(table,data))
-			return rv
+			return 'INSERT INTO %s ( %s ) VALUES ( %s ) ;' % (table,",".join(model_fields),self.mapdata(table,data))
+
+	def safe_insert(self,table,data,placeholder):
+		good_table = self.check_table(table)
+		good_fields = self.check_fields(table,data.keys())
+		if good_table and good_fields:
+			flist = self.model.fields(table)
+			vlist = ",".join( [placeholder] * len(flist))
+			return 'INSERT INTO %s ( %s ) VALUES ( %s ) ;' % (table,','.join(flist), vlist)
+		return None
+		
+	def assign_list(self,table,data):
+		a_list = []
+		for f in self.model.payload(table):
+			if f in data:
+				a_list.append( "%s=%s" % (f,self.mapfield(table,f,data)) )
+		return ', '.join( a_list )
+
+	def where_list(self,table,data):
+		w_list = []
+		for k in self.model.key(table):
+			if k in data:
+				w_list.append( "%s=%s" % (k,self.mapfield(table,k,data)) )
+		return ' and '.join( w_list )
+	
+	def update(self,table,data):
+		return 'UPDATE %s SET %s WHERE %s;' % (table,self.assign_list(table,data),self.where_list(table,data))
 
 	def delete(self,table,data):
-		pass
+		return "DELETE FROM %s WHERE %s;" % (table,self.where_list(table,data))
 
-	def update(self,table,data):
-		pass
-
+	def select(self,table,data):
+		if data:
+			return "SELECT * FROM %s WHERE %s ;" % (table,self.where_list(table,data))
+		return "SELECT * FROM %s ;" % table
 
 
 if __name__ == '__main__':
@@ -90,3 +118,21 @@ if __name__ == '__main__':
 	for t in sql.model.tables():
 		print("-- TABLE %s: (VER: %s)" % (t,sql.model.version(t)))
 		print(sql.schema(t))
+
+	data = { 'email': 'x@y.z', 'password': 'xyzzyMoo', 'authenticated': True, 'active': True }
+	question = { 'email': 'x@y.z', 'question': 'who cuts your hair?', 'answer': 'my mom' }
+
+	print( sql.insert( 'usr', data ) )
+	print( sql.safe_insert( 'usr', data, '?' ) )
+	print( sql.update( 'usr', data ) )
+	print( sql.delete( 'usr', data ) )
+	print( sql.select( 'usr', data ) )
+	print( sql.select( 'usr', None ) )
+
+	print( sql.insert( 'security', question ) )
+	print( sql.safe_insert( 'security', question, '?' ) )
+	print( sql.update( 'security', question ) )
+	print( sql.delete( 'security', question ) )
+	print( sql.select( 'security', question ) )
+	print( sql.select( 'security', None ) )
+
