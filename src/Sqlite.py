@@ -71,6 +71,9 @@ class Sqlite():
 	def type(self):
 		return self.db_type
 
+	def table_list(self):
+		return self.exec(self.table_list_query())
+
 	def table_list_query(self):
 		return self.tbl_list_qry
 

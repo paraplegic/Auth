@@ -11,7 +11,7 @@ USR_CFG=$(MODEL)/users.yml
 TDIR=./data
 BKP=./backup.tgz
 
-TESTS=test_config test_persist test_model test_sql test_sqlite test_postgres test_mysql
+TESTS=test_config test_model test_sql test_sqlite test_postgres test_mysql test_persist 
 
 all:	test
 

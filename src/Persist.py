@@ -29,7 +29,6 @@ class Persist():
 
 	def edit(self, source, data ):
 		qry = self.provider.upsert.safe_insert(source,data)
-		print( "::::", qry )
 		try:
 			c = self.provider.exec(qry)
 			self.commit()
@@ -58,13 +57,7 @@ class Persist():
 			print(' fail: %s' % e )
 
 	def table_list(self):
-		rv = []
-		tlq = self.provider.table_list_query()
-		tbls =  self.provider.exec(tlq)
-		for t in tbls:
-			print(t)
-			rv.append(t['name'])
-		return rv
+		return [t['name'] for t in self.provider.table_list()]
 
 	def validateModel(self):
 		missing = []
