@@ -15,11 +15,16 @@ class Model(object):
 		except Exception as e:
 			print( "MODEL ERROR: %s" % e )
 		
-	def database(self):
-		return self.model['name']
-
 	def secrets(self):
 		return self.config.object('secrets')
+
+	def enums(self,table):
+		rv=[]
+		for f in self.fields(table):
+			schema = self.field(table,f)
+			if 'enum' in schema['type']:
+				rv.append(f)
+		return rv
 
 	def server(self):
 		return self.config.object('server')
@@ -83,5 +88,7 @@ if __name__ == '__main__':
 	import sys
 
 	model = Model( sys.argv[1] )
-	print(model.database())
+	for t in model.tables():
+		for f in model.enums(t):
+			print(t,f,model.values(t,f))
 

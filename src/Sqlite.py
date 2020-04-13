@@ -41,6 +41,10 @@ class Sqlite():
 		secrets = self.get_secrets()
 		return os.path.join(secrets['path'],secrets['dbms'])
 
+	def database(self):
+		secrets = self.get_secrets()
+		return secrets['dbms']
+
 	def get_cursor(self):
 		return self.cx.cursor()
 
@@ -87,8 +91,7 @@ class Sqlite():
 			rv.execute(qry,dta)
 			return rv
 		except Exception as e:
-			print( "ERROR: %s" % e )
-			print( "QUERY: %s" % qry )
+			print( "ERROR: %s\n  QUERY:" % e, qry )
 		return None
 
 	def exec(self,qry):
@@ -97,8 +100,7 @@ class Sqlite():
 			rv.execute(qry)
 			return rv
 		except Exception as e:
-			print( "ERROR: %s" % e )
-			print( "QUERY: %s" % qry )
+			print( "ERROR: %s\n  QUERY:" % e, qry )
 			return None
 
 	def upsert(self,table,data):

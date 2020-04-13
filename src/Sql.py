@@ -113,7 +113,6 @@ if __name__ == '__main__':
 	model = Model(sys.argv[1])
 	sql = Sql( model = model )
 
-	print( sql.model.database() )
 	print( sql.model.tables() )
 	for t in sql.model.tables():
 		print("-- TABLE %s: (VER: %s)" % (t,sql.model.version(t)))

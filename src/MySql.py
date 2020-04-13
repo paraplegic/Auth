@@ -6,7 +6,7 @@ from Sqlite import Sqlite
 
 class MySql(Sqlite):
 	'''
-	The service provider for an SQLite3 file based database
+	The service provider for an MySQL database
 	'''
 
 	cx = None

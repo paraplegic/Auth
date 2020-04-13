@@ -7,7 +7,7 @@ from Sqlite import Sqlite
 
 class Postgres(Sqlite):
 	'''
-	The service provider for an SQLite3 file based database
+	The service provider for an PostgreSQL database
 	'''
 
 	cx = None

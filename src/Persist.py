@@ -24,11 +24,13 @@ class Persist():
 
 		except Exception as e:
 			print( 'ERROR: (put) %s' % e )
+			self.edit(source,data)
 
 		return False
 
 	def edit(self, source, data ):
 		qry = self.provider.upsert.safe_insert(source,data)
+		print("::::", qry)
 		try:
 			c = self.provider.exec(qry)
 			self.commit()
@@ -113,18 +115,9 @@ if __name__ == '__main__':
 
 	print('dbStore: %s' % sys.argv[2] )
 	store = Persist( provider = db )
-	print("db:", store.model.database())
+	print("db:", db.database())
 	print("server:", store.model.server())
 	print("secrets:", store.model.secrets())
-	c = store.table_list()
-	for t in store.model.tables():
-		print(t, store.model.key(t), store.model.version(t))
-		for f in store.model.fields(t):
-			print("\t", f, store.model.field(t,f))
-			ev = store.model.values(t,f)
-			if ev:
-				print("\tenum values:", store.model.values(t,f))
-
 	
 	data = { 'email': 'x@y.z', 'password': 'xyzzyMoo', 'authenticated': True, 'active': True }
 	question = { 'email': 'x@y.z', 'question': 'who cuts your hair?', 'answer': 'my mom' }
