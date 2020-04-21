@@ -37,8 +37,13 @@ database:
        version: 1.0
        security: personal_data
        fields:
+          uname:
+             type: varchar(128)
+             constraints: 
+               - not null
           email:
              type: varchar(128)
+             formhint: email
              constraints: 
                - not null
           password:
@@ -57,12 +62,16 @@ database:
                - default false
        keys:
           - email
+       index:
+          - uname
+
     mfa:
        version: 1.0
        security: admin
        fields:
           email:
              type: varchar(128)
+             formhint: email
              constraints: 
                - not null
           mfatype:
@@ -94,6 +103,7 @@ database:
        fields:
           email:
              type: varchar(128)
+             formhint: email
              constraints: 
                - not null
           question:
@@ -114,6 +124,7 @@ database:
        fields:
           email:
              type: varchar(128)
+             formhint: email
              constraints: 
                - not null
           role:

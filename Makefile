@@ -11,7 +11,7 @@ USR_CFG=$(MODEL)/users.yml
 TDIR=./data
 BKP=./backup.tgz
 
-TESTS=test_config test_model test_sql test_sqlite test_postgres test_mysql test_persist 
+TESTS=test_config test_model test_sql test_sqlite test_postgres test_mysql test_persist test_html_form
 
 all:	test
 
@@ -92,5 +92,11 @@ test_mysql:
 	@echo MySql
 	@echo ===========
 	@cd $(WORK_DIR);. ./bin/activate ; . ./test/env.sh; export DBMS_PORT=3306; python3 $(SOURCE_DIR)/MySql.py $(USR_CFG)
+
+test_html_form:
+	@echo ===========
+	@echo Form
+	@echo ===========
+	@cd $(WORK_DIR);. ./bin/activate ; . ./test/env.sh; export DBMS_PORT=3306; python3 $(SOURCE_DIR)/HtmlForm.py $(USR_CFG)
 
 test: update $(TESTS) 

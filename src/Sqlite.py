@@ -91,7 +91,9 @@ class Sqlite():
 			rv.execute(qry,dta)
 			return rv
 		except Exception as e:
-			print( "ERROR: %s\n  QUERY:" % e, qry )
+			## print( "ERROR: %s\n  QUERY:" % e, qry )
+			pass
+
 		return None
 
 	def exec(self,qry):

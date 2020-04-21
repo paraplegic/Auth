@@ -27,7 +27,7 @@ class Config():
 		print(dump(self.config))
 
 	def objects(self):
-		return self.config.keys()
+		return list(self.config.keys())
 
 	def object(self, object):
 		if object in self.config:
@@ -51,5 +51,5 @@ if __name__ == '__main__':
 		exit(1)
 
 	print(cfg.name)
-	print(cfg.config.keys())
+	print(cfg.objects())
 	## cfg.dump()

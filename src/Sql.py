@@ -7,10 +7,10 @@ class Sql:
 		self.model = model
 		
 	def schema(self,table):
-		rv = None
+		rv = []
 		try:
-			schema = self.model.table(table)
-			rv = 'CREATE TABLE IF NOT EXISTS ''%s'' (\n' % table
+			model = self.model.table(table)
+			sch = 'CREATE TABLE IF NOT EXISTS ''%s'' (\n' % table
 			for fld in self.model.fields(table):
 				field = self.model.field(table,fld)
 				typ = field['type']
@@ -19,19 +19,20 @@ class Sql:
 						typ = 'integer'
 					else:
 						typ = 'text'
-				rv += ' %s %s' % (fld,typ)
+				sch += ' %s %s' % (fld,typ)
 				if 'constraints' in field:
-					rv += ' %s' % ' '.join(field['constraints'])
-				rv += ',\n'
+					sch += ' %s' % ' '.join(field['constraints'])
+				sch += ',\n'
  
-			if 'keys' in schema:
-				rv += ' primary key( %s )\n' % ",".join(schema['keys'])
+			if 'keys' in model:
+				sch += ' primary key( %s )\n' % ",".join(model['keys'])
 			else:
 				rv = rv[0:-2]
 
-			rv += ');\n'
-			if 'index' in schema:
-				rv += 'create index %s_ix on %s ( %s );\n' % (table,table,','.join(schema['index']))
+			sch += ');\n'
+			rv.append(sch)
+			if 'index' in model:
+				rv.append('create index %s_ix on %s ( %s );\n' % (table,table,','.join(model['index'])))
 			return rv
 
 		except Exception as e:
@@ -116,9 +117,10 @@ if __name__ == '__main__':
 	print( sql.model.tables() )
 	for t in sql.model.tables():
 		print("-- TABLE %s: (VER: %s)" % (t,sql.model.version(t)))
-		print(sql.schema(t))
+		for s in sql.schema(t):
+			print(s)
 
-	data = { 'email': 'x@y.z', 'password': 'xyzzyMoo', 'authenticated': True, 'active': True }
+	data = { 'uname': 'xyz', 'email': 'x@y.z', 'password': 'xyzzyMoo', 'authenticated': True, 'active': True }
 	question = { 'email': 'x@y.z', 'question': 'who cuts your hair?', 'answer': 'my mom' }
 
 	print( sql.insert( 'usr', data ) )

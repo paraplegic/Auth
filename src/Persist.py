@@ -1,5 +1,8 @@
 from Model import Model
 
+class Db_Error(Exception):
+	pass
+
 class Persist():
 
 	model = None
@@ -51,7 +54,8 @@ class Persist():
 		try:
 			print("-- Instantiating %s: (version: %s)" % (table,self.model.version(table)),end='')
 			cursor = self.provider.get_cursor()
-			cursor.execute(sch)
+			for cmd in sch:
+				cursor.execute(cmd)
 			self.revision(table,v)
 			print( ' [ok]' )
 
@@ -79,7 +83,8 @@ class Persist():
 			print("model check complete: [ok]")
 			return
 
-		## instantiate relies upon the model table existing (do first)
+		## instantiate relies upon the model table existing 
+		## before the rest, so create it first.
 		if 'model' in missing:
 			missing.remove('model')
 			self.instantiate('model')
@@ -119,7 +124,7 @@ if __name__ == '__main__':
 	print("server:", store.model.server())
 	print("secrets:", store.model.secrets())
 	
-	data = { 'email': 'x@y.z', 'password': 'xyzzyMoo', 'authenticated': True, 'active': True }
+	data = { 'uname': 'xyz', 'email': 'x@y.z', 'password': 'xyzzyMoo', 'authenticated': True, 'active': True }
 	question = { 'email': 'x@y.z', 'question': 'who cuts your hair?', 'answer': 'my mom' }
 
 	store.put( 'usr', data )
