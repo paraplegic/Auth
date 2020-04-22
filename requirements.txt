@@ -1,9 +1,10 @@
 ## orjson>=2.6,<3
-## fastapi[all]
 ## email-validator
 ## python-multipart
-## uvicorn
 ## dateutils
+## fastapi[all]
+fastapi
+uvicorn
 passlib
 pytest
 jinja2

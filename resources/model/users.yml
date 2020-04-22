@@ -38,24 +38,29 @@ database:
        security: personal_data
        fields:
           uname:
+             label: User Name
              type: varchar(128)
              constraints: 
                - not null
           email:
+             label: Email
              type: varchar(128)
              formhint: email
              constraints: 
                - not null
           password:
+             label: Password
              type: password
              constraints: 
                - not null
           authenticated:
+             label: Authenticated
              type: boolean
              constraints: 
                - not null
                - default false
           active:
+             label: Active
              type: boolean
              constraints: 
                - not null
@@ -70,11 +75,13 @@ database:
        security: admin
        fields:
           email:
+             label: Email
              type: varchar(128)
              formhint: email
              constraints: 
                - not null
           mfatype:
+             label: Authentication Scheme
              type: enum
              values:
                - undefined
@@ -85,10 +92,12 @@ database:
              constraints: 
                - default 1
           mfa:
+             label: Coordinates
              type: varchar(128)
              constraints: 
                - not null
           authenticated:
+             label: Authenticated
              type: boolean
              constraints: 
                - not null
@@ -102,15 +111,18 @@ database:
        security: personal_data
        fields:
           email:
+             label: Email
              type: varchar(128)
              formhint: email
              constraints: 
                - not null
           question:
+             label: Security Question
              type: varchar(128)
              constraints: 
                - not null
           answer:
+             label: Security Answer
              type: varchar(128)
              constraints: 
                - not null
@@ -123,11 +135,13 @@ database:
        security: admin
        fields:
           email:
+             label: Email
              type: varchar(128)
              formhint: email
              constraints: 
                - not null
           role:
+             label: Role
              type: enum
              values:
                - undefined

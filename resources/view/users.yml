@@ -1,0 +1,48 @@
+database:
+  name: UserViews
+  tables:
+    login:
+       version: 1.0
+       security: personal_data
+       fields:
+          email:
+             label: Email
+             type: varchar(128)
+             formhint: email
+             constraints: 
+               - not null
+          password:
+             label: Password
+             type: password
+             constraints: 
+               - not null
+    register:
+       version: 1.0
+       security: admin
+       fields:
+          uname:
+             label: User Name
+             type: varchar(64)
+             constraints: 
+               - not null
+          email:
+             label: Email
+             type: varchar(128)
+             formhint: email
+             constraints: 
+          email2:
+             label: Re-Enter Email
+             type: varchar(128)
+             formhint: email
+             constraints: 
+               - not null
+          password:
+             label: Password
+             type: password
+             constraints: 
+               - not null
+          password2:
+             label: Re-Enter Password
+             type: password
+             constraints: 
+               - not null

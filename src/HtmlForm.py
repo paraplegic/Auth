@@ -9,13 +9,21 @@ class HtmlForm:
 		classes = None
 		rv = []
 		rv.append( "<form action='%s' METHOD='post' enctype='multipart-form-data'>\n" % url)
-		for f in model.fields(table):
+		for f in self.model.fields(table):
 			rv.extend( self.field(table,f) )
+		rv.append(self.button('submit', 'Submit'))
+		rv.append(self.button('reset','Reset'))
 		rv.append("</form>\n")
 		return self.stringify(rv)
 
+	def button(self,typ,label):
+		rv = " <div class='formgroup'>\n"
+		rv += "<br><button class='btn btn-primary' type='%s' value='%s'>%s</button>\n" % (typ,typ,label)
+		rv += " </div>"
+		return rv
+
 	def typeMap(self,table,field):
-		schema = model.field(table,field)
+		schema = self.model.field(table,field)
 		if 'formhint' in schema:
 			return schema['formhint'] 
 		if field in ['password'] or schema['type'] in ['password']:
@@ -23,8 +31,14 @@ class HtmlForm:
 		if schema['type'] in ['enum']:
 			return 'select'
 		if schema['type'] in ['boolean']:
-			return 'radio'
+			return 'checkbox'
 		return 'text'
+
+	def fieldLabel(self,table,fname):
+		sch = self.model.field(table,fname)
+		if 'label' in sch:
+			return sch['label']
+		return fname.capitalize()
 
 	def field(self,table,fname):
 		typ = self.typeMap(table,fname)
@@ -34,14 +48,20 @@ class HtmlForm:
 			for ix,val in enumerate(self.model.values(table,fname)):
 				inp += "  <option value='%d'>%s</option>\n" % (ix,val)
 			inp += " </select>\n"
+
+		if typ not in ['radio', 'checkbox']:
+			inp = '  <br>' + inp
 		
 		rv = [ 
 			" <div class='formgroup'>\n",
-			"  <label for='%s'>%s:</label><br>\n" % (fname,fname.capitalize()),
+			"  <label for='%s'>%s:</label>\n" % (fname,self.fieldLabel(table,fname)),
 			inp,
 			" </div>\n"
 		]
 		return rv
+
+	def list(self):
+		return self.model.tables()
 
 	def stringify(self, slist ):
 		rv = ''

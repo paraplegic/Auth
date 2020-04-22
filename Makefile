@@ -40,9 +40,6 @@ realclean: clean
 backup:
 	tar -zcvf $(BKP) ./
 
-run:
-	@echo ::: ERROR: $@ not implemented
-
 test_config:
 	@echo ===========
 	@echo config
@@ -53,15 +50,15 @@ test_persist:
 	@echo ===========
 	@echo persistence sqlite
 	@echo ===========
-	@cd $(WORK_DIR);. ./bin/activate ; . ./test/env.sh; python3 $(SOURCE_DIR)/Persist.py $(USR_CFG) sqlite
+	@cd $(WORK_DIR);. ./bin/activate ; . ./test/env.sh; python3 src/Persist.py $(USR_CFG) sqlite
 	@echo ===========
 	@echo persistence postgres
 	@echo ===========
-	@cd $(WORK_DIR);. ./bin/activate ; . ./test/env.sh; python3 $(SOURCE_DIR)/Persist.py $(USR_CFG) postgres
+	@cd $(WORK_DIR);. ./bin/activate ; . ./test/env.sh; python3 src/Persist.py $(USR_CFG) postgres
 	@echo ===========
 	@echo persistence mysql
 	@echo ===========
-	@cd $(WORK_DIR);. ./bin/activate ; . ./test/env.sh; export DBMS_PORT=3306; python3 $(SOURCE_DIR)/Persist.py $(USR_CFG) mysql
+	@cd $(WORK_DIR);. ./bin/activate ; . ./test/env.sh; export DBMS_PORT=3306; python3 src/Persist.py $(USR_CFG) mysql
 
 test_model:
 	@echo ===========
@@ -100,3 +97,6 @@ test_html_form:
 	@cd $(WORK_DIR);. ./bin/activate ; . ./test/env.sh; export DBMS_PORT=3306; python3 $(SOURCE_DIR)/HtmlForm.py $(USR_CFG)
 
 test: update $(TESTS) 
+
+run:	update
+	cd $(WORK_DIR)/src;. ../bin/activate ; . ../test/env.sh; uvicorn main:app --reload --host 0.0.0.0 --port 8002
