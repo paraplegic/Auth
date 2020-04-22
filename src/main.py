@@ -4,22 +4,7 @@ from starlette.templating import Jinja2Templates
 from starlette.responses import Response, RedirectResponse
 
 from Model import Model
-from HtmlForm import HtmlForm
-
-class EndPoint():
-
-	def __init__(self):
-		self.navList = []
-		pass
-
-	def add(self,url,label):
-		self.navList.append( {'url': url, 'label': label} )
-
-	def render(self):
-		rv = []
-		for ep in self.navList:
-			rv.append('<li><a href="%s">%s</a></li>' % (ep['url'],ep['label']))
-		return rv
+from HtmlForm import HtmlForm, EndPoint
 
 templates = Jinja2Templates(directory="../../templates")
 app = FastAPI()

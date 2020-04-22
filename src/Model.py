@@ -1,6 +1,10 @@
 from Config import Config
 
 class Model(object):
+	'''
+	A class to take a specific yml file and model either a database table
+	or a view of one in accordance with the MVC design pattern. Yadda yadda.
+	'''
 
 	config = None
 	model = None

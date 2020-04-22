@@ -1,6 +1,31 @@
 from Model import Model
 
+class EndPoint:
+	'''
+	A class to define the menu entries for a form application
+	in html ... uses Bootstrap classes to define the entries
+	in a dropdown menu link item
+	'''
+
+	def __init__(self):
+		self.navList = []
+		pass
+
+	def add(self,url,label):
+		self.navList.append( {'url': url, 'label': label} )
+
+	def render(self):
+		rv = []
+		for ep in self.navList:
+			rv.append('<li><a href="%s">%s</a></li>' % (ep['url'],ep['label']))
+		return rv
+
+
 class HtmlForm:
+	'''
+	A class to create an HtmlForm which can correspond either to a
+	db model, or a view as provided by the Model class.
+	'''
 
 	def __init__(self,model):
 		self.model = model 
